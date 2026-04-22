@@ -1,0 +1,233 @@
+:root{--p:#1a3a8f;--s:#6c757d;--ok:#4caf50;--no:#f44336;--ex:#9c27b0;--r:8px;--sh:0 2px 8px rgba(0,0,0,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,'Microsoft YaHei',sans-serif;color:#333;background:#f5f7fa;padding:10px}
+.container{max-width:800px;margin:0 auto;background:#fff;border-radius:var(--r);box-shadow:0 0 10px rgba(0,0,0,.1);overflow:hidden}
+header{background:linear-gradient(135deg,var(--p),#2d5cc2);color:#fff;padding:15px 20px;text-align:center}
+h1{font-size:22px;margin-bottom:5px}
+.subtitle{font-size:14px;opacity:.9}
+.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:10px}
+.stat-box{background:rgba(255,255,255,.15);padding:8px 12px;border-radius:6px;min-width:100px;flex:1;max-width:150px}
+.stat-number{font-size:20px;font-weight:700}
+.stat-label{font-size:12px;opacity:.85}
+.filter-controls{padding:15px 20px;background:#f8f9fa;border-radius:6px;margin-bottom:15px}
+.mode-title{font-weight:700;margin:8px 0;font-size:15px}
+.mode-options{display:flex;flex-wrap:wrap;gap:10px}
+.mode-option{display:flex;align-items:center;gap:5px;flex:1;min-width:100px;cursor:pointer}
+.mode-label{font-size:13px}
+.exam-timer,.exam-info{display:none;text-align:center;margin:10px 0}
+.exam-timer{font-size:16px;font-weight:700;color:var(--ex);background:rgba(156,39,176,.1);padding:8px 12px;border:1px solid var(--ex);border-radius:5px}
+.exam-info{font-size:14px;color:var(--ex)}
+.question-card{background:#fff;border-radius:var(--r);padding:20px;margin-bottom:20px;box-shadow:var(--sh);border-left:4px solid var(--p)}
+.question-card.exam-mode{border-left-color:var(--ex)}
+.question-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:10px;gap:10px}
+.question-position-container{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.question-position{font-weight:700;color:var(--p);background:#f0f5ff;padding:5px 10px;border-radius:5px;font-size:14px;white-space:nowrap}
+.question-position.exam-mode{background:#f3e5f5;color:var(--ex)}
+/* 新增：跳转图标按钮样式 */
+.jump-icon-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:none;border-radius:4px;background:#f0f5ff;color:var(--p);cursor:pointer;transition:all 0.2s;padding:0;flex-shrink: 0}
+.jump-icon-btn:hover{background:var(--p);color:#fff;transform:scale(1.05)}
+.jump-icon-btn svg{display:block}
+.question-type-indicator{font-size:13px;color:#666;font-style:italic;width:100%;margin-top:5px}
+.question-text{font-size:16px;margin-bottom:20px;color:#111;font-weight:700}
+/* 新增：题目图片容器样式 */
+.question-image-container{text-align:center;margin:20px 0}
+/* 新增：题目图片样式 */
+.question-image{max-width:100%;height:auto;max-height:300px;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,0.1);border:1px solid #eee;display:block;margin:0 auto}
+.option{display:flex;align-items:flex-start;margin-bottom:10px;padding:10px 12px;border:1px solid #ddd;border-radius:6px;cursor:pointer;transition:.2s}
+.option:hover{background:#f9f9f9;transform:translateY(-1px)}
+.option.selected{border-color:var(--p);background:#f0f5ff}
+.option.selected.exam-mode{border-color:var(--ex);background:#f3e5f5}
+.option.correct{border-color:var(--ok);background:#e8f5e9}
+.option.incorrect{border-color:var(--no);background:#ffebee}
+.option-letter{width:28px;height:28px;line-height:28px;text-align:center;background:#eaeaea;border-radius:50%;margin-right:12px;font-weight:700;font-size:14px}
+.option.selected .option-letter{background:var(--p);color:#fff}
+.option.selected.exam-mode .option-letter{background:var(--ex);color:#fff}
+.option.correct .option-letter{background:var(--ok);color:#fff}
+.option.incorrect .option-letter{background:var(--no);color:#fff}
+.option-text{flex:1;padding-top:3px;font-size:15px}
+.controls{display:flex;flex-direction:column;gap:10px;margin-top:20px;width:100%}
+.main-controls,.secondary-controls{display:flex;gap:10px;width:100%;justify-content:center;flex-wrap:wrap}
+button{padding:12px 15px;border:none;border-radius:6px;cursor:pointer;font-size:15px;font-weight:600;transition:.2s;min-width:120px;flex:1}
+.btn-primary{background:var(--p);color:#fff}
+.btn-primary:hover{background:#0f2a7a}
+.btn-secondary{background:var(--s);color:#fff}
+.btn-secondary:hover{background:#5a6268}
+.btn-success{background:var(--ok);color:#fff}
+.btn-success:hover{background:#3d8b40}
+.btn-danger{background:var(--no);color:#fff}
+.btn-danger:hover{background:#d32f2f}
+.btn-exam{background:var(--ex);color:#fff}
+.btn-exam:hover{background:#7b1fa2}
+.result-panel{margin-top:20px;padding:15px;border-radius:var(--r);display:none;animation:fadeIn .3s}
+.result-correct{background:#e8f5e9;border-left:4px solid var(--ok)}
+.result-incorrect{background:#ffebee;border-left:4px solid var(--no)}
+.result-title{font-weight:700;margin-bottom:8px}
+.correct-answers{color:var(--ok)}
+.incorrect-answers{color:var(--no)}
+.answer-explanation{margin-top:10px;padding-top:10px;border-top:1px dashed #ccc;font-size:14px}
+.simple-navigation{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:15px 0;border-top:1px solid #eaeaea}
+.nav-buttons{display:flex;gap:10px}
+.footer{text-align:center;padding:15px;color:#666;font-size:12px;border-top:1px solid #eaeaea}
+.exam-results{display:none;background:#f3e5f5;border-left:4px solid var(--ex);border-radius:var(--r);padding:20px;margin-top:20px}
+.exam-results h3{color:var(--ex);text-align:center;margin-bottom:15px}
+.exam-stats{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.exam-stat{text-align:center;flex:1;min-width:100px}
+.exam-stat-value{font-size:24px;font-weight:700;color:var(--ex)}
+.exam-stat-label{font-size:12px;color:#666}
+.exam-pass{background:#e8f5e9;color:var(--ok)}
+.exam-fail{background:#ffebee;color:var(--no)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.time-warning{animation:pulse 1s infinite;color:var(--no)}
+
+/* 隐藏底部导航栏的位置信息，但保留元素占位以维持按钮布局 */
+.nav-info{visibility:hidden}
+
+/* 响应式按钮布局 - 新增部分 */
+/* 练习模式 - 大屏幕（≥600px） */
+@media (min-width:601px){
+  body:not(.exam-mode) .controls{flex-direction:column;justify-content:center;align-items:center}
+}
+/* 第一行：上一题、下一题 */
+body:not(.exam-mode) .secondary-controls{display:flex;justify-content:center;gap:10px;width:100%;order:1}
+/* 第二行：检查/显示答案 */
+body:not(.exam-mode) .main-controls{display:flex;justify-content:center;gap:10px;width:100%;order:2;margin-top:10px}
+/* 考试模式 - 大屏幕（≥600px） */
+.exam-mode .main-controls{display:none}
+/* 默认布局（大屏幕）：两行布局 */
+.exam-mode .controls{display:flex;flex-direction:column;gap:10px;width:100%}
+/* 第一行：上一题、下一按钮（在同一行，默认左对齐） */
+.exam-mode .secondary-controls{display:flex;justify-content:center;gap:10px;width:100%}
+/* 第二行：提交试卷按钮（默认左对齐） */
+.exam-mode #submit-exam-container{display:flex;justify-content:flex-end;width:100%}
+/* 小屏幕（≤600px）布局 */
+@media(max-width:600px){
+  h1{font-size:18px}
+  button{width:100%}
+  .question-card{padding:15px}
+  /* 练习模式 - 小屏幕 */
+  body:not(.exam-mode) .controls{flex-direction:column;justify-content:center}
+  body:not(.exam-mode) .main-controls{order:2;display:flex;justify-content:center;width:100%;margin-top:10px}
+  body:not(.exam-mode) .secondary-controls{order:1;display:flex;justify-content:center;width:100%}
+  /* 考试模式 - 小屏幕 */
+  .exam-mode .controls{flex-direction:column;gap:10px}
+  .exam-mode .secondary-controls{order:1;display:flex;justify-content:center;width:100%;margin-right:0}
+  .exam-mode #submit-exam-container{order:2;display:flex;justify-content:center;width:100%;margin-top:10px}
+  /* 小屏幕下跳转图标稍大一点 */
+  .jump-icon-btn{width:32px;height:32px}
+}
+
+/* ===== 新增：跳转浮动面板样式 ===== */
+.jump-panel {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.jump-panel-content {
+  background: white;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 320px;
+  overflow: hidden;
+  animation: panelFade 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes panelFade {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.jump-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  min-width: auto;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: #eee;
+  color: #333;
+}
+
+.jump-panel-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto; /* 第一列自适应，第二列为按钮宽度 */
+  gap: 10px;
+  align-items: center;
+}
+
+.jump-panel-body input {
+  width: 100%; /* 在grid中占满第一列 */
+  max-width: 200px; /* 新增：限制输入框最大宽度，防止其无限制扩张 */
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* 重要：确保padding和border包含在宽度内 */
+  min-width: 0; /* 关键：允许输入框在flex/grid布局中收缩，避免挤压 */
+}
+
+.jump-panel-body input:focus {
+  outline: none;
+  border-color: var(--p);
+  box-shadow: 0 0 0 2px rgba(26, 58, 143, 0.1);
+}
+/* 确保按钮有固定的最小宽度，不会被挤压 */
+#jump-action-btn {
+  min-width: 60px; /* 给按钮设置一个安全的最小宽度 */
+  width: 60px; /* 新增：固定按钮宽度 */
+  white-space: nowrap; /* 防止按钮文字换行 */
+  padding: 10px 5px; /* 可调整内边距以适配新宽度 */
+}
+/* 小屏幕适配 */
+@media (max-width: 600px) {
+  .jump-panel {
+    padding: 15px;
+  }
+  .jump-panel-content {
+    max-width: 280px;
+  }
+}
+
+/* 添加到CSS部分末尾 */
+.custom-dialog{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.dialog-content{background:white;border-radius:10px;width:100%;max-width:320px;overflow:hidden;animation:dialogFade 0.3s ease}
+@keyframes dialogFade{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.dialog-body{padding:20px;text-align:center;font-size:16px;line-height:1.5;color:#333}
+.dialog-footer{display:flex;border-top:1px solid #eee}
+.dialog-btn{flex:1;padding:15px 0;border:none;background:none;font-size:16px;font-weight:500;cursor:pointer}
+.dialog-btn.ok{color:#0066cc;border-left:1px solid #eee}
+.dialog-btn.cancel{color:#666}

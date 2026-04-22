@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业余无线电C类题库练习和模拟考试</title>
+<link rel="stylesheet" href="style.css">
+<!-- ========== PWA 核心元数据 ========== -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a3a8f">
+<!-- iOS Safari 特殊处理 -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="无线电题库">
+<link rel="apple-touch-icon" href="./icons/icon-152x152.png">
+<!-- Windows Tile -->
+<meta name="msapplication-TileColor" content="#1a3a8f">
+<meta name="msapplication-TileImage" content="./icons/icon-144x144.png">
+<!-- 禁止电话和邮箱自动识别 -->
+<meta name="format-detection" content="telephone=no, email=no">
+</head>
+<body>
+<div class="container">
+<header>
+<h1>业余无线电C类题库练习和模拟考试</h1>
+<div class="subtitle"></div>
+<div class="stats">
+<div class="stat-box"><div class="stat-number" id="total-questions">0</div><div class="stat-label">总题数</div></div>
+<div class="stat-box"><div class="stat-number" id="answered-questions">0</div><div class="stat-label">已答题</div></div>
+<div class="stat-box"><div class="stat-number" id="correct-answers">0</div><div class="stat-label">正确数</div></div>
+<div class="stat-box"><div class="stat-number" id="accuracy-rate">0%</div><div class="stat-label">正确率</div></div>
+</div>
+</header>
+<main>
+<section class="filter-controls">
+<div class="practice-mode">
+<div class="mode-title">练习模式：</div>
+<div class="mode-options">
+<label class="mode-option"><input type="radio" name="practice-mode" value="sequential" checked><span class="mode-label">顺序练习</span></label>
+<label class="mode-option"><input type="radio" name="practice-mode" value="random"><span class="mode-label">随机练习</span></label>
+<label class="mode-option"><input type="radio" name="practice-mode" value="incorrect"><span class="mode-label">错题练习</span></label>
+<label class="mode-option"><input type="radio" name="practice-mode" value="exam"><span class="mode-label">模拟考试</span></label>
+</div>
+</div>
+<div class="exam-timer" id="exam-timer">剩余时间: <span id="time-remaining">90:00</span></div>
+<div class="exam-info" id="exam-info">考试模式：90分钟，90道题（单选70，多选20），答对70题合格</div>
+</section>
+<section class="question-area">
+<div class="question-card" id="question-card">
+<div class="question-header">
+<div class="question-position-container">
+  <div class="question-position" id="current-question-position">第 1 题 / 共 0 题</div>
+  <!-- 新增：跳转图标按钮 -->
+  <button id="jump-icon-btn" class="jump-icon-btn" title="跳转到题目">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- 三条平行横线，经典的“菜单/列表”图标 -->
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+</div>
+<div class="question-type-indicator" id="question-type-indicator">[单选题]</div>
+</div>
+<div class="question-text" id="current-question-text">加载题目中...</div>
+<!-- 新增：图片容器，默认隐藏 -->
+<div class="question-image-container" id="question-image-container" style="display: none;"></div>
+<div class="options-container" id="options-container"></div>
+<div class="controls">
+<div class="main-controls">
+<button class="btn-primary" id="check-answer">检查/显示答案</button>
+</div>
+<div class="secondary-controls">
+<button class="btn-secondary" id="prev-question">上一题</button>
+<button class="btn-secondary" id="next-question">下一题</button>
+</div>
+<div id="submit-exam-container">
+<button class="btn-danger" id="submit-exam" style="display:none">提交试卷</button>
+</div>
+</div>
+<div class="simple-navigation">
+<div class="nav-info"><span id="current-position"></span></div>
+<div class="nav-buttons">
+<button class="btn-exam" id="start-exam" style="display:none">开始考试</button>
+<button class="btn-danger" id="reset-all">重置记录</button>
+</div>
+</div>
+<div class="result-panel" id="result-panel"></div>
+</div>
+<div class="exam-results" id="exam-results"></div>
+</section>
+</main>
+<footer class="footer">
+<p>本练习系统，仅供学习参考</p>
+<p>数据来源: 2025版《业余无线电台操作技术能力验证题库》 </p>
+</footer>
+</div>
+
+<!-- 新增：跳转浮动面板 -->
+<div id="jump-panel" class="jump-panel">
+  <div class="jump-panel-content">
+    <div class="jump-panel-header">
+      <span>跳转到题目</span>
+      <button id="close-jump-panel" class="close-btn" title="关闭">×</button>
+    </div>
+    <div class="jump-panel-body">
+      <input type="number" id="jump-input" min="1" placeholder="输入题号" aria-label="输入要跳转的题号">
+      <button id="jump-action-btn" class="btn-primary btn-small">跳转</button>
+    </div>
+  </div>
+</div>
+
+<div id="customDialog" class="custom-dialog">
+  <div class="dialog-content">
+    <div class="dialog-body" id="dialogMessage">确定要提交试卷吗？提交后不能修改！</div>
+    <div class="dialog-footer">
+      <button id="dialogCancel" class="dialog-btn cancel">取消</button>
+      <button id="dialogOk" class="dialog-btn ok">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="storage.js"></script>
+<script src="dialog.js"></script>
+<script src="utils.js"></script>
+<script src="app.js"></script>
+<script src="main.js"></script>
+<!-- ========== PWA Service Worker 注册与生命周期管理 ========== -->
+<script>
+  (function manageServiceWorker() {
+    // 1. 注册 Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker
+          .register('./service-worker.js', { scope: './' })
+          .then(function (registration) {
+            console.log('ServiceWorker 注册成功，作用域: ', registration.scope);
+
+            // 检查是否有等待中的新SW（即已安装但未激活）
+            if (registration.waiting) {
+              // 提示用户有更新（可集成到您的UI中）
+              console.log('检测到新版本已就绪，等待激活。');
+              // showUpdateNotification(registration);
+            }
+
+            // 监听新的Service Worker被安装
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // 此时新SW已安装，但旧SW还在控制页面，提示更新
+                  console.log('新内容已下载，请刷新应用。');
+                  // showUpdateNotification(registration);
+                }
+              });
+            });
+          })
+          .catch(function (err) {
+            console.error('ServiceWorker 注册失败: ', err);
+          });
+      });
+
+      // 2. 监听来自Service Worker的消息（如离线状态）
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data.type === 'SW_ACTIVATED') {
+          console.log('Service Worker 已更新并激活。');
+        }
+      });
+
+      // 3. 处理离线/在线状态（增强体验）
+      function updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        const utils = window.app ? window.app.utils : new Utils(); // 假设您的工具类可用
+        if (!isOnline) {
+          utils.showMessage('⚠️ 当前处于离线模式，将使用本地缓存内容。', 'warning');
+        }
+      }
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      updateOnlineStatus(); // 初始化检查
+    } else {
+      console.warn('当前浏览器不支持 Service Worker。');
+    }
+
+    // 提示更新的UI函数（示例）
+    // function showUpdateNotification(registration) {
+    //   if (confirm('发现新版本，是否立即刷新以更新应用？')) {
+    //     if (registration.waiting) {
+    //       // 通知等待中的SW跳过等待并激活
+    //       registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    //     }
+    //     // 激活后刷新页面
+    //     window.location.reload();
+    //   }
+    // }
+  })();
+</script>
+</body>
+</html>
