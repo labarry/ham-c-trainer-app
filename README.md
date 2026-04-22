@@ -1,11 +1,5 @@
 业余无线电C类题库练习与模拟考试 PWA 应用
 
-https://img.shields.io/badge/部署在-GitHub%20Pages-blue?logo=github
-
-https://img.shields.io/badge/技术-PWA-orange?logo=pwa
-
-https://img.shields.io/badge/在线访问-www.moogs.cn-brightgreen
-
 一个专为中国业余无线电操作技术能力验证（C类）​ 考试设计的渐进式网页应用（PWA）。提供完整的题库练习、模拟考试、错题复习等功能，支持离线使用，并可以安装到设备桌面。
 
 最新题库：2025版 | 在线访问：https://www.moogs.cn
