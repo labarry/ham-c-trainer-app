@@ -3943,7 +3943,7 @@ const questionBank = [
     "options": [
       {
         "letter": "A",
-        "text": "7MHz、14MHz、21MHz、28MHz、47GHz 频段 32"
+        "text": "7MHz、14MHz、21MHz、28MHz、47GHz 频段 "
       },
       {
         "letter": "B",
